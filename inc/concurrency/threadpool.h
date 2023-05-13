@@ -1,0 +1,8 @@
+//
+// Created by rozhin on 13.05.23.
+//
+
+#ifndef MAPREDUCE_HW2_CPP_THREADPOOL_H
+#define MAPREDUCE_HW2_CPP_THREADPOOL_H
+
+#endif //MAPREDUCE_HW2_CPP_THREADPOOL_H
