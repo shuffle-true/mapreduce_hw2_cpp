@@ -4,6 +4,10 @@ enable_testing()
 
 set(MR_TEST_ROOT ${MR_ROOT}/test)
 
+#include_directories(
+#        ../inc
+#)
+
 macro(AddTest TARGET SOURCES)
     add_executable(${TARGET} ${SOURCES} )
     target_link_libraries(${TARGET} GTest::gtest_main mr)
@@ -13,4 +17,9 @@ endmacro()
 AddTest(
         mr_threadpool_test
         ${MR_TEST_ROOT}/threadpool_test.cc
+)
+
+AddTest(
+        mr_bullshit_test
+        ${MR_TEST_ROOT}/bullshit_test.cc
 )
