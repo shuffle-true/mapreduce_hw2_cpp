@@ -6,6 +6,7 @@
 #define MAPREDUCE_JOB_H
 
 #include "../utils/job_context.h"
+#include "../utils/mapreduce_context.h"
 #include "../utils/macro.h"
 #include "file_mapping.h"
 #include <fstream>
@@ -40,8 +41,14 @@ private:
      */
     void split_file_routine();
 
+    /*
+     * Запуск мапперов на полученных сплитах данных
+     */
+    void run_map_task();
+
 private:
-    JobContext ctx;
+    JobContext ctx_;
+    MapReduceContext mr_ctx_;
     std::unique_ptr<file_mapping_handler> file_mapping_handler_;
 };
 

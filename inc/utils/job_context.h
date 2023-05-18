@@ -48,7 +48,7 @@ private:
     std::string tmp_dir_;
     std::string out_dir_;
 
-    std::vector<std::pair<const char*, size_t>> in_splits;
+    std::vector<std::pair<const char*, size_t>> in_splits_;
 
     map_task_base* map_;
 
