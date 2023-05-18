@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_set>
 #include <future>
+#include <map>
 
 class ThreadPool{
     public:
@@ -87,6 +88,7 @@ class ThreadPool{
 
     ~ThreadPool() {
         // можно добавить wait_all() если нужно дождаться всех задачь перед удалением
+        wait_all();
         quite = true;
         for (uint32_t i = 0; i < threads.size(); ++i) {
             queue_cv.notify_all();
@@ -103,7 +105,74 @@ void sum(int& ans, std::vector<int>& arr) {
     }
 }
 
+void reducer (std::vector<std::vector<std::string>>& mapper_output, std::map<std::string, int>&result, std::string key){
+    result.insert({key, 0});
+    for(size_t i=0; i<mapper_output.size(); i++){
+        for(size_t j=0; j < mapper_output[i].size(); j++){
+            if (mapper_output[i][j]==key){
+                result[key]++;
+            }
+        }
+    }
+}
 
+std::vector<std::string> shuffler(std::vector<std::vector<std::string>>& mapper_output){
+    std::vector<std::string> result;
+
+    for(size_t i=0; i<mapper_output.size(); i++){
+        for(size_t j=0; j < mapper_output[i].size(); j++){
+            std::string key = mapper_output[i][j];
+            if (std::find(result.begin(), result.end(), key) == result.end())
+            {
+                result.push_back(key);
+            }
+        }
+    }
+    std::sort(result.begin(), result.end());
+    return result;
+}
+
+
+
+
+int main(){
+    std::vector<std::string> mapper1_res = {"hadoop", "check", "hadoop", "hadoop", "check", "hadoop", "hadoop", "check", "hadoop"};
+    std::vector<std::string> mapper2_res = {"hadoop", "a", "b", "hadoop", "check", "hadoop", "c", "b", "b"};
+    std::vector<std::string> mapper3_res = {"c", "b", "b", "c", "b", "b"};
+    std::vector<std::string> mapper4_res = {"hadoop", "check", "hadoop", "c", "b", "b", "hadoop", "check", "hadoop"};
+    std::vector<std::vector<std::string>> mapper_out;
+    std::map<std::string, int> result;
+    
+    int num_threads = 5;
+
+    
+    mapper_out.push_back(mapper1_res);
+    mapper_out.push_back(mapper2_res);
+    mapper_out.push_back(mapper3_res);
+    mapper_out.push_back(mapper4_res);
+
+
+    auto tmp = shuffler(mapper_out);
+
+    for (auto& t : tmp)
+    std::cout << t << "\n";
+
+
+    ThreadPool tp(num_threads);
+
+    for(int i=0; i<tmp.size(); ++i){
+        auto id = tp.add_task(reducer, std::ref(mapper_out), std::ref(result), std::ref(tmp[i]));
+    }
+    
+
+
+    for (auto& t : result)
+    std::cout << t.first <<"->"<< t.second << "\n";
+    
+
+
+    return 0;
+}
 
 // int main() {
 //     ThreadPool tp(3);
