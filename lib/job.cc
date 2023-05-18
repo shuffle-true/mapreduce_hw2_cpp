@@ -6,15 +6,16 @@
 
 namespace mapreduce {
 
-job::job(mapreduce::JobContext &context) : ctx(context) {}
+job::job(mapreduce::JobContext &context) : ctx_(context) {}
 
 void job::start() {
     split_file_routine();
+    run_map_task();
 }
 
 void job::split_file_routine() {
-    auto& filenames = ctx.filenames_;
-    std::string merged_filename = ctx.tmp_dir_ + "/" + "merged.txt";
+    auto& filenames = ctx_.filenames_;
+    std::string merged_filename = ctx_.tmp_dir_ + "/" + "merged.txt";
     std::ofstream merged(merged_filename);
     std::ostreambuf_iterator<char> it(merged);
 
@@ -55,7 +56,32 @@ void job::split_file_routine() {
 
     file_mapping_handler_ = std::make_unique<file_mapping_handler>(fd, fsize, dataPtr);
 
+    auto& in_splits = ctx_.in_splits_;
+    if (fsize < N_BYTES_SPLIT_SIZE) {
+        in_splits.resize(1);
+        in_splits.at(0) = {file_mapping_handler_->data_, file_mapping_handler_->f_size_};
+    } else {
+        const char* ptr = file_mapping_handler_->data_;
+        while (ptr - file_mapping_handler_->data_ < file_mapping_handler_->f_size_) {
+            const char* start_pos = ptr;
+            ptr += N_BYTES_SPLIT_SIZE;
+            while (*ptr != '\n') {
+                ptr++;
+            }
+            in_splits.push_back({start_pos, ptr - start_pos});
+            ptr++;
+        }
+    }
+}
 
+void job::run_map_task() {
+    auto mapper = ctx_.map_;
+    auto& map_result = mr_ctx_.mapper_results;
+    map_result.resize(ctx_.in_splits_.size());
+
+    for (size_t i = 0; i < ctx_.in_splits_.size(); ++i) {
+        mapper->operator()(ctx_.in_splits_[i].first, ctx_.in_splits_[i].second, map_result[i]);
+    }
 }
 
 } // mapreduce
