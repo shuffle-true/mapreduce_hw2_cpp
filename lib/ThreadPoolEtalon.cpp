@@ -116,8 +116,7 @@ void reducer (std::vector<std::vector<std::string>>& mapper_output, std::map<std
     }
 }
 
-std::vector<std::string> shuffler(std::vector<std::vector<std::string>>& mapper_output){
-    std::vector<std::string> result;
+void shuffler(std::vector<std::vector<std::string>>& mapper_output, std::vector<std::string> &result){
 
     for(size_t i=0; i<mapper_output.size(); i++){
         for(size_t j=0; j < mapper_output[i].size(); j++){
@@ -129,7 +128,6 @@ std::vector<std::string> shuffler(std::vector<std::vector<std::string>>& mapper_
         }
     }
     std::sort(result.begin(), result.end());
-    return result;
 }
 
 
@@ -142,6 +140,7 @@ int main(){
     std::vector<std::string> mapper4_res = {"hadoop", "check", "hadoop", "c", "b", "b", "hadoop", "check", "hadoop"};
     std::vector<std::vector<std::string>> mapper_out;
     std::map<std::string, int> result;
+    std::vector<std::string> keys;
     
     int num_threads = 5;
 
@@ -152,16 +151,16 @@ int main(){
     mapper_out.push_back(mapper4_res);
 
 
-    auto tmp = shuffler(mapper_out);
+    shuffler(mapper_out,keys);
 
-    for (auto& t : tmp)
+    for (auto& t : keys)
     std::cout << t << "\n";
 
 
     ThreadPool tp(num_threads);
 
-    for(int i=0; i<tmp.size(); ++i){
-        auto id = tp.add_task(reducer, std::ref(mapper_out), std::ref(result), tmp[i]);
+    for(int i=0; i<keys.size(); ++i){
+        auto id = tp.add_task(reducer, std::ref(mapper_out), std::ref(result), keys[i]);
     }
 
 
