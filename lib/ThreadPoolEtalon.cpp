@@ -161,9 +161,8 @@ int main(){
     ThreadPool tp(num_threads);
 
     for(int i=0; i<tmp.size(); ++i){
-        auto id = tp.add_task(reducer, std::ref(mapper_out), std::ref(result), std::ref(tmp[i]));
+        auto id = tp.add_task(reducer, std::ref(mapper_out), std::ref(result), tmp[i]);
     }
-    
 
 
     for (auto& t : result)
