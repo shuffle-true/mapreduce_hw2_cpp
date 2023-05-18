@@ -37,13 +37,20 @@ set(
         mr_job_src
         ${MR_ROOT_SRC}/job.cc
         ${MR_ROOT_SRC}/job_context.cc
+        ${MR_ROOT_SRC}/mapreduce_context.cc
         ${MR_ROOT_SRC}/file_mapping.cc
+)
+
+set(
+        mr_map_src
+        ${MR_ROOT_SRC}/map_base.cc
 )
 
 add_library(mr
         STATIC
         ${mr_concurrency_src}
-        ${mr_job_src})
+        ${mr_job_src}
+        ${mr_map_src})
 
 if(BUILD_TEST)
     include(mr_unittest.cmake)

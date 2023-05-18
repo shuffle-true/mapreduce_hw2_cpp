@@ -23,3 +23,8 @@ AddTest(
         mr_bullshit_test
         ${MR_TEST_ROOT}/bullshit_test.cc
 )
+
+AddTest(
+        mr_mapper_test
+        ${MR_TEST_ROOT}/mapper_test.cc
+)
