@@ -105,19 +105,23 @@ void sum(int& ans, std::vector<int>& arr) {
     }
 }
 
-void reducer (std::vector<std::vector<std::string>>& mapper_output, std::map<std::string, int>&result, std::string key){
-    result.insert({key, 0});
+void reducer (std::vector<std::vector<std::string>>& mapper_output, std::map<std::string, int>&result, std::string key, std::mutex &mx){
+
+    int temp = 0;
     for(size_t i=0; i<mapper_output.size(); i++){
         for(size_t j=0; j < mapper_output[i].size(); j++){
             if (mapper_output[i][j]==key){
-                result[key]++;
+                temp+=1;
             }
         }
     }
+    mx.lock();
+    result.insert({key, 0});
+    result[key] = temp;
+    mx.unlock();
 }
 
 void shuffler(std::vector<std::vector<std::string>>& mapper_output, std::vector<std::string> &result){
-
     for(size_t i=0; i<mapper_output.size(); i++){
         for(size_t j=0; j < mapper_output[i].size(); j++){
             std::string key = mapper_output[i][j];
@@ -141,8 +145,10 @@ int main(){
     std::vector<std::vector<std::string>> mapper_out;
     std::map<std::string, int> result;
     std::vector<std::string> keys;
+    std::mutex mx;
     
-    int num_threads = 5;
+    
+    int num_threads = 3;
 
     
     mapper_out.push_back(mapper1_res);
@@ -159,13 +165,14 @@ int main(){
 
     ThreadPool tp(num_threads);
 
-    for(int i=0; i<keys.size(); ++i){
-        auto id = tp.add_task(reducer, std::ref(mapper_out), std::ref(result), keys[i]);
+    for(int i=0; i<keys.size(); i++){
+        auto id = tp.add_task(reducer, std::ref(mapper_out), std::ref(result), keys[i], std::ref(mx));
     }
 
+    tp.wait_all();
 
     for (auto& t : result)
-    std::cout << t.first <<"->"<< t.second << "\n";
+        std::cout << t.first <<"->"<< t.second << "\n";
     
 
 
