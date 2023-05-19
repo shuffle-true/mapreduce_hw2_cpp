@@ -57,7 +57,13 @@ void threadpool::run() {
             auto elem = std::move(tasks_queue.front());
             tasks_queue.pop();
             lock.unlock();
-            elem.first.get();
+
+            try {
+                elem.first.get();
+            }
+            catch (std::exception& exc) {
+                exc.what();
+            }
 
             std::lock_guard<std::mutex> lock(completed_task_ids_mtx);
             done_ids.insert(elem.second);
