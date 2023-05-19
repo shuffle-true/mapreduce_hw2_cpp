@@ -19,6 +19,8 @@ public:
 
 public:
     map_vec mapper_results;
+    pair_vec shuffler_results;
+    std::map<std::string_view, size_t> reducer_results;
 };
 
 } // mapreduce

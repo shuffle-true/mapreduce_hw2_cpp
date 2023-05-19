@@ -43,7 +43,6 @@ set(
 
 set(
         mr_map_src
-        ${MR_ROOT_SRC}/map_base.cc
 )
 
 add_library(mr

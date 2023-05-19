@@ -5,17 +5,20 @@
 #include "utils/job_context.h"
 
 namespace mapreduce {
-
 JobContext::JobContext() = default;
 JobContext::JobContext(const std::vector<std::string> &filenames, const size_t num_workers, const size_t num_reducers,
-                       const std::string tmp_dir, const std::string out_dir, mapreduce::map_task_base *map_task)
+                       const std::string tmp_dir, const std::string out_dir,
+                       std::function<void(const char *, size_t, pair_vec &)> m_task,
+                       std::function<void(map_vec &, std::map<std::string_view, size_t> &, std::string_view,
+                                          std::mutex &)> r_task)
         :
         filenames_(filenames),
         num_workers_(num_workers),
         num_reducers_(num_reducers),
         tmp_dir_(tmp_dir),
         out_dir_(out_dir),
-        map_(map_task) {}
+        map_task_(m_task),
+        reduce_task_(r_task) {}
 
 void JobContext::set_filenames(const std::vector<std::string> &filenames) {
     filenames_ = filenames;
@@ -35,10 +38,6 @@ void JobContext::set_tmp_dir(const std::string tmp_dir) {
 
 void JobContext::set_out_dir(const std::string out_dir) {
     out_dir_ = out_dir;
-}
-
-void JobContext::set_map(mapreduce::map_task_base *map_task) {
-    map_ = map_task;
 }
 
 std::vector<std::string> JobContext::get_filenames() const {
@@ -61,8 +60,5 @@ std::string JobContext::get_tmp_dir() const {
     return out_dir_;
 }
 
-map_task_base *JobContext::get_map() const {
-    return map_;
-}
 
 } // mapreduce

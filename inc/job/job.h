@@ -8,6 +8,7 @@
 #include "../utils/job_context.h"
 #include "../utils/mapreduce_context.h"
 #include "../utils/macro.h"
+#include "../concurrency/threadpool.h"
 #include "file_mapping.h"
 #include <fstream>
 #include <iostream>
@@ -46,10 +47,17 @@ private:
      */
     void run_map_task();
 
+    void run_shuffler_task();
+
+    void run_reducer_task();
+
 private:
     JobContext ctx_;
     MapReduceContext mr_ctx_;
     std::unique_ptr<file_mapping_handler> file_mapping_handler_;
+    std::mutex reducer_mx;
+
+    friend class JobTester;
 };
 
 } // mapreduce

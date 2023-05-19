@@ -9,20 +9,10 @@ set(MR_TEST_ROOT ${MR_ROOT}/test)
 #)
 
 macro(AddTest TARGET SOURCES)
-    add_executable(${TARGET} ${SOURCES} )
+    add_executable(${TARGET} ${SOURCES} ${MR_TEST_ROOT}/test_utils.cc)
     target_link_libraries(${TARGET} GTest::gtest_main mr)
     add_test(${TARGET} ${TARGET})
 endmacro()
-
-AddTest(
-        mr_threadpool_test
-        ${MR_TEST_ROOT}/threadpool_test.cc
-)
-
-AddTest(
-        mr_bullshit_test
-        ${MR_TEST_ROOT}/bullshit_test.cc
-)
 
 AddTest(
         mr_mapper_test
