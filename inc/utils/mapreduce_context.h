@@ -18,8 +18,8 @@ public:
     MapReduceContext();
 
 public:
-    map_vec mapper_results;
-    pair_vec shuffler_results;
+    tensor_t mapper_results;
+    matrix_t shuffler_results;
     std::map<std::string_view, size_t> reducer_results;
 };
 

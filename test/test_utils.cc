@@ -21,14 +21,14 @@ void JobTester::test_map_routine() {
 void JobTester::test_shuffler_routine() {
     jobber.split_file_routine();
     jobber.run_map_task();
-    jobber.run_shuffler_task();
+//    jobber.run_shuffler_task();
 }
 
 void JobTester::test_reduce_routine() {
     jobber.split_file_routine();
     jobber.run_map_task();
-    jobber.run_shuffler_task();
-    jobber.run_reducer_task();
+//    jobber.run_shuffler_task();
+//    jobber.run_reducer_task();
 }
 
 }

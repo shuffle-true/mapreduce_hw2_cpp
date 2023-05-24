@@ -8,12 +8,14 @@
 #include "../utils/job_context.h"
 #include "../utils/mapreduce_context.h"
 #include "../utils/macro.h"
+#include "../utils/utils.h"
 #include "../concurrency/threadpool.h"
 #include "file_mapping.h"
 #include <fstream>
 #include <iostream>
 #include <memory>
 #include <string_view>
+#include <cassert>
 
 #include <sys/mman.h>
 #include <fcntl.h>
@@ -47,14 +49,23 @@ private:
      */
     void run_map_task();
 
-    void run_shuffler_task();
-
-    void run_reducer_task();
+    /*
+     * Изменяет tensor_t объект. На выходе у каждого маппера num_reducers контейнеров,
+     * содержащих результат работы маппера
+     */
+    void get_mapper_container_for_shuffler(const matrix_t& hidden_mapper_res);
 
 private:
+    // окружение джобы
     JobContext ctx_;
+
+    // содержит в себе результаты работы маппера, шаффлера, редьюсера
     MapReduceContext mr_ctx_;
+
+    // хоолдер для mmap файла
     std::unique_ptr<file_mapping_handler> file_mapping_handler_;
+
+    // FIXME: нам это точно нужно?
     std::mutex reducer_mx;
 
     friend class JobTester;

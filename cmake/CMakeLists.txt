@@ -42,14 +42,15 @@ set(
 )
 
 set(
-        mr_map_src
+        mr_utils_src
+        ${MR_ROOT_SRC}/utils.cc
 )
 
 add_library(mr
         STATIC
         ${mr_concurrency_src}
         ${mr_job_src}
-        ${mr_map_src})
+        ${mr_utils_src})
 
 if(BUILD_TEST)
     include(mr_unittest.cmake)

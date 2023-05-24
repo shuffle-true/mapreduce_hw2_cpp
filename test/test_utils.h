@@ -27,11 +27,11 @@ public:
         return jobber.ctx_.in_splits_;
     }
 
-    map_vec mapper_results() const {
+    tensor_t mapper_results() const {
         return jobber.mr_ctx_.mapper_results;
     }
 
-    pair_vec shuffler_results() const {
+    matrix_t shuffler_results() const {
         return jobber.mr_ctx_.shuffler_results;
     }
 
