@@ -108,7 +108,6 @@ void job::get_mapper_container_for_shuffler(const matrix_t& hidden_mapper_res) {
     for (size_t i = 0; i < hidden_mapper_res.size(); ++i) {
         for (size_t j = 0; j < hidden_mapper_res[i].size(); ++j) {
             auto first_sym = toupper(hidden_mapper_res[i][j].first[0]);
-            std::cout << char(first_sym) << std::endl;
             for (size_t r = 0; r < ctx_.num_reducers_; ++r) {
                 if (char(first_sym) >= alphabet[r].first
                         && char(first_sym) < alphabet[r].second) {
