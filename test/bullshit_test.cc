@@ -30,7 +30,7 @@ TEST(jobber, mapper) {
                                   mapper);
 
     mapreduce::JobTester tester(context);
-    tester.test_map_routine();
+    tester.test_shuffler_routine();
     auto mapper_res = tester.mapper_results();
 
 //    ASSERT_EQ(mapper_res.size(), 11);

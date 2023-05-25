@@ -31,7 +31,7 @@ public:
         return jobber.mr_ctx_.mapper_results;
     }
 
-    matrix_t shuffler_results() const {
+    std::vector<std::map<std::string_view, std::vector<size_t>>> shuffler_results() const {
         return jobber.mr_ctx_.shuffler_results;
     }
 
