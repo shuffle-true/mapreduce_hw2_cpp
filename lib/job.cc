@@ -11,6 +11,7 @@ job::job(mapreduce::JobContext &context) : ctx_(context) {}
 void job::start() {
     split_file_routine();
     run_map_task();
+    run_shuffler_task();
 }
 
 void job::split_file_routine() {
@@ -115,6 +116,81 @@ void job::get_mapper_container_for_shuffler(const matrix_t& hidden_mapper_res) {
 //            }
 //        }
 //    }
+}
+
+void job::run_shuffler_task() {
+    // Создание словаря уникальных первых символов
+
+    std::list<std::string_view> vocab;
+    std::list<std::string_view> ::iterator itr = vocab.begin();
+    auto& mapper_output = mr_ctx_.mapper_results;
+
+    itr++;
+    vocab.insert(itr, mapper_output[0][0].first);
+
+    for(int i=0; i<mapper_output.size(); i++){
+        for(int j=0; j<mapper_output[i].size(); j++){
+            std::string_view word = mapper_output[i][j].first;
+            bool added = false;
+
+            for(itr = vocab.begin(); itr != vocab.end(); ++itr){
+                if (word.compare(*itr)==0){
+                    added = true;
+                    break;
+                }
+                else if (word.compare(*itr)<0){
+                    vocab.insert(itr, word);
+                    added = true;
+                    break;
+                }
+            }
+            if(!added){
+                vocab.insert(itr, word);
+            }
+        }
+    }
+
+    // Распаковка по редьюсерам
+
+    int element_num = 0;
+    int batch_size = vocab.size() / ctx_.num_reducers_;
+    while (((vocab.size()-batch_size)%(ctx_.num_reducers_-1)!=0)) batch_size+=1;
+
+
+    itr = vocab.begin();
+    std::map<std::string_view, std::vector<size_t>> reducer_temp;
+    while(element_num<batch_size){
+        reducer_temp[*itr] = {};
+        for(int i=0; i<mapper_output.size(); i++){
+            for(int j=0; j<mapper_output[i].size(); j++){
+                if(mapper_output[i][j].first == *itr){
+                    reducer_temp[*itr].push_back(1);
+                }
+            }
+        }
+        element_num += 1;
+        itr++;
+    }
+
+    mr_ctx_.shuffler_results.push_back(reducer_temp);
+
+    batch_size = (vocab.size()-batch_size)/(ctx_.num_reducers_-1);
+
+    for(int k=0; k<batch_size*(ctx_.num_reducers_-1); k+=batch_size){
+        std::map<std::string_view, std::vector<size_t>> reducer_temp_l;
+        for( int b=0; b<batch_size; b++){
+            reducer_temp_l[*itr] = {};
+            for(int i=0; i<mapper_output.size(); i++){
+                for(int j=0; j<mapper_output[i].size(); j++){
+                    if(mapper_output[i][j].first == *itr){
+                        reducer_temp_l[*itr].push_back(1);
+                    }
+                }
+            }
+            itr++;
+        }
+        mr_ctx_.shuffler_results.push_back(reducer_temp_l);
+    }
 }
 
 } // mapreduce

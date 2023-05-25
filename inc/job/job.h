@@ -16,6 +16,7 @@
 #include <memory>
 #include <string_view>
 #include <cassert>
+#include <list>
 
 #include <sys/mman.h>
 #include <fcntl.h>
@@ -48,6 +49,11 @@ private:
      * Запуск мапперов на полученных сплитах данных
      */
     void run_map_task();
+
+    /*
+     * Выполняет перетасовку данных к редьюсерам
+     */
+    void run_shuffler_task();
 
     /*
      * Изменяет tensor_t объект. На выходе у каждого маппера num_reducers контейнеров,
