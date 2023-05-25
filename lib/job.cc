@@ -76,7 +76,8 @@ void job::split_file_routine() {
 
 void job::run_map_task() {
     auto& mapper = ctx_.map_task_;
-    matrix_t hidden_map_res; hidden_map_res.resize(ctx_.in_splits_.size());
+    auto& map_res = mr_ctx_.mapper_results;
+    map_res.resize(ctx_.in_splits_.size());
     threadpool tp(get_min_available_threads(ctx_.num_workers_, ctx_.in_splits_.size()));
 
     // кладем все в тредпул и ждем завершения всех задач
@@ -85,37 +86,35 @@ void job::run_map_task() {
                 mapper,
                 std::ref(ctx_.in_splits_[i].first),
                 std::ref(ctx_.in_splits_[i].second),
-                std::ref(hidden_map_res[i])
+                std::ref(map_res[i])
         );
     }
     tp.wait_all();
-
-    get_mapper_container_for_shuffler(hidden_map_res);
 }
 
 void job::get_mapper_container_for_shuffler(const matrix_t& hidden_mapper_res) {
-    auto& map_res = mr_ctx_.mapper_results;
-    // размер матчится по мапперам
-    map_res.resize(ctx_.in_splits_.size());
-
-    // это измерение всегда матчится по кол-ву редьюсеров
-    for (auto& mat : map_res) {
-        mat.resize(ctx_.num_reducers_);
-    }
-    auto alphabet = get_reducer_mapping(ctx_.num_reducers_);
-    assert(alphabet.size() == ctx_.num_reducers_);
-
-    for (size_t i = 0; i < hidden_mapper_res.size(); ++i) {
-        for (size_t j = 0; j < hidden_mapper_res[i].size(); ++j) {
-            auto first_sym = toupper(hidden_mapper_res[i][j].first[0]);
-            for (size_t r = 0; r < ctx_.num_reducers_; ++r) {
-                if (char(first_sym) >= alphabet[r].first
-                        && char(first_sym) < alphabet[r].second) {
-                    map_res[i][r].push_back(hidden_mapper_res[i][j]);
-                }
-            }
-        }
-    }
+//    auto& map_res = mr_ctx_.mapper_results;
+//    // размер матчится по мапперам
+//    map_res.resize(ctx_.in_splits_.size());
+//
+//    // это измерение всегда матчится по кол-ву редьюсеров
+//    for (auto& mat : map_res) {
+//        mat.resize(ctx_.num_reducers_);
+//    }
+//    auto alphabet = get_reducer_mapping(ctx_.num_reducers_);
+//    assert(alphabet.size() == ctx_.num_reducers_);
+//
+//    for (size_t i = 0; i < hidden_mapper_res.size(); ++i) {
+//        for (size_t j = 0; j < hidden_mapper_res[i].size(); ++j) {
+//            auto first_sym = toupper(hidden_mapper_res[i][j].first[0]);
+//            for (size_t r = 0; r < ctx_.num_reducers_; ++r) {
+//                if (char(first_sym) >= alphabet[r].first
+//                        && char(first_sym) < alphabet[r].second) {
+//                    map_res[i][r].push_back(hidden_mapper_res[i][j]);
+//                }
+//            }
+//        }
+//    }
 }
 
 } // mapreduce

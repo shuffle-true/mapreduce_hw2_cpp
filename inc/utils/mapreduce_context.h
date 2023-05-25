@@ -18,9 +18,9 @@ public:
     MapReduceContext();
 
 public:
-    tensor_t mapper_results;
+    matrix_t mapper_results;
     matrix_t shuffler_results;
-    std::map<std::string_view, size_t> reducer_results;
+    matrix_t reducer_results;
 };
 
 } // mapreduce

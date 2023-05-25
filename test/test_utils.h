@@ -27,7 +27,7 @@ public:
         return jobber.ctx_.in_splits_;
     }
 
-    tensor_t mapper_results() const {
+    matrix_t mapper_results() const {
         return jobber.mr_ctx_.mapper_results;
     }
 
@@ -35,7 +35,7 @@ public:
         return jobber.mr_ctx_.shuffler_results;
     }
 
-    std::map<std::string_view, size_t> reducer_results() const {
+    matrix_t reducer_results() const {
         return jobber.mr_ctx_.reducer_results;
     }
 
