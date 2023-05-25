@@ -10,6 +10,8 @@
 
 #define mapper_output_type std::vector<std::vector<std::pair<std::string, int>>>
 #define shuffler_output_type std::vector<std::map<std::string, std::vector<int>>>
+#define reducer_input_type std::map<std::string, std::vector<int>>
+#define reducer_output_type std::vector<std::map<std::string, int>>
 
 class ThreadPool{
     public:
@@ -181,9 +183,26 @@ void shuffler(mapper_output_type & mapper_output, shuffler_output_type & result,
 }
 
 
+void reducer(reducer_input_type &reducer_input, reducer_output_type &reducer_final, std::mutex & mx){
+    std::map<std::string, int> temp;
+
+    for (const auto &ptr : reducer_input){
+        temp[ptr.first] = 0;
+        for(int i = 0; i< reducer_input[ptr.first].size(); i++){
+            temp[ptr.first] += 1;
+        }
+    }
+    mx.lock();
+    reducer_final.push_back(temp);
+    mx.unlock();
+
+}
+
+
 int main(){
 
     int num_reducers = 4;
+    int num_threads = 5;
 
     std::vector<std::pair<std::string, int>> mapper_output1 = {
         {"Anna", 1}, {"Anna", 1}, {"Hello", 1}, {"Check", 1},  {"Anna", 1},{"Abra", 1}, {"Test", 1},  {"Monika", 1}
@@ -194,8 +213,13 @@ int main(){
     std::vector<std::pair<std::string, int>> mapper_output3 = {
          {"Hello", 1}, {"Check", 1}, {"Anna", 1}, {"Anna", 1}, {"Hello", 1}, {"Check", 1},  {"Anna", 1}, {"Zorro", 1}, {"MammaMia", 1}
     };
+    std::mutex mx;
+
+
 
     mapper_output_type complete_output;
+    reducer_output_type reducer_output;
+
     complete_output.push_back(mapper_output1);
     complete_output.push_back(mapper_output2);
     complete_output.push_back(mapper_output3);
@@ -204,12 +228,25 @@ int main(){
     shuffler_output_type shuffler_result;
     shuffler(complete_output, shuffler_result, num_reducers);
 
-    for(int i=0; i<shuffler_result.size(); i++){
-        for(const auto& elem : shuffler_result[i])
-        {
-            std::cout << elem.first << "\n";
+    // for(int i=0; i<shuffler_result.size(); i++){
+    //     for(const auto& elem : shuffler_result[i])
+    //     {
+    //         std::cout << elem.first << "\n";
+    //     }
+    //     std::cout << "=====" << "\n";
+    // }
+
+
+    ThreadPool tp(num_threads);
+    for(int i =0; i<num_reducers; i++){
+        auto id = tp.add_task(reducer, std::ref(shuffler_result[i]), std::ref(reducer_output), std::ref(mx));
+    }
+    tp.wait_all();
+
+    for(int i =0; i<reducer_output.size(); i++){
+        for (const auto &ptr : reducer_output[i]){
+            std::cout<<ptr.first<<"->"<<ptr.second<<std::endl;
         }
-        std::cout << "=====" << "\n";
     }
 
     return 0;
