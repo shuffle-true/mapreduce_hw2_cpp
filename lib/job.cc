@@ -13,6 +13,7 @@ void job::start() {
     run_map_task();
     run_shuffler_task();
     run_reducer_task();
+    save_to_json();
 }
 
 void job::split_file_routine() {

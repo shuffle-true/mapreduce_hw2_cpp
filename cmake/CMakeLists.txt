@@ -57,6 +57,9 @@ add_library(mr
         ${mr_job_src}
         ${mr_utils_src})
 
+add_executable(mr_main ${MR_ROOT}/test/main.cc)
+target_link_libraries(mr_main mr)
+
 if(BUILD_TEST)
     include(mr_unittest.cmake)
 endif(BUILD_TEST)

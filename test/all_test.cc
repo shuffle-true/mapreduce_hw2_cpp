@@ -158,9 +158,6 @@ TEST(jobber, shuffler) {
     ASSERT_EQ(shuffler_res[3]["try"], std::vector<size_t>({1}));
     ASSERT_EQ(shuffler_res[3]["understand"], std::vector<size_t>({1}));
     ASSERT_EQ(shuffler_res[3]["you"], std::vector<size_t>({1}));
-
-
-
 }
 
 
@@ -204,11 +201,6 @@ TEST(jobber, reducer) {
     ASSERT_EQ(reducer_res[3]["try"], 1);
     ASSERT_EQ(reducer_res[3]["understand"], 1);
     ASSERT_EQ(reducer_res[3]["you"], 1);
-    
-
-
-
-
 }
 
 TEST(jobber, saver) {
