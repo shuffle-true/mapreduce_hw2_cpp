@@ -15,11 +15,6 @@ macro(AddTest TARGET SOURCES)
 endmacro()
 
 AddTest(
-        mr_mapper_test
-        ${MR_TEST_ROOT}/mapper_test.cc
-)
-
-AddTest(
-        mr_bullshit_test
-        ${MR_TEST_ROOT}/bullshit_test.cc
+        mr_all_test
+        ${MR_TEST_ROOT}/all_test.cc
 )

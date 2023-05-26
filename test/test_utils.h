@@ -18,6 +18,7 @@ public:
     void test_map_routine();
     void test_shuffler_routine();
     void test_reduce_routine();
+    void test_save_routine();
 
     size_t in_splits_size() const {
         return jobber.ctx_.in_splits_.size();

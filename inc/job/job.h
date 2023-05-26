@@ -17,6 +17,8 @@
 #include <string_view>
 #include <cassert>
 #include <list>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 #include <sys/mman.h>
 #include <fcntl.h>
@@ -61,6 +63,11 @@ private:
     void run_reducer_task();
 
     /*
+     * Сериализация работы программы в json файл
+     */
+    void save_to_json();
+
+    /*
      * Изменяет tensor_t объект. На выходе у каждого маппера num_reducers контейнеров,
      * содержащих результат работы маппера
      */
@@ -75,9 +82,6 @@ private:
 
     // хоолдер для mmap файла
     std::unique_ptr<file_mapping_handler> file_mapping_handler_;
-
-    // FIXME: нам это точно нужно?
-    std::mutex reducer_mx;
 
     friend class JobTester;
 };

@@ -161,6 +161,57 @@ TEST(jobber, reducer) {
     auto reducer_res = tester.reducer_results();
 }
 
+TEST(jobber, saver) {
+    std::vector<std::string> filenames = {
+            "../../test/1.txt",
+            "../../test/2.txt"
+    };
+
+    mapreduce::JobContext context(
+            filenames,
+            12, 4,
+            ".", ".", mapper, reducer);
+
+    mapreduce::JobTester tester(context);
+    tester.test_save_routine();
+
+    std::vector<std::ifstream> in_files;
+    in_files.resize(4);
+    for (size_t i = 0; i < 4; ++i) {
+        std::string filename = "./reducer_" + std::to_string(i);
+        in_files[i] = std::ifstream(filename);
+    }
+
+    std::vector<json> j_container;
+    j_container.resize(4);
+    for (size_t i = 0; i < 4; ++i) {
+        in_files[i] >> j_container[i];
+    }
+
+    ASSERT_EQ(j_container[0]["A"], 1);
+    ASSERT_EQ(j_container[0]["And"], 1);
+    ASSERT_EQ(j_container[0]["Answer"], 1);
+    ASSERT_EQ(j_container[0]["Between"], 1);
+
+    ASSERT_EQ(j_container[1]["I"], 1);
+    ASSERT_EQ(j_container[1]["Is"], 1);
+    ASSERT_EQ(j_container[1]["Me"], 1);
+    ASSERT_EQ(j_container[1]["Ok"], 1);
+    ASSERT_EQ(j_container[1]["To"], 1);
+
+    ASSERT_EQ(j_container[2]["What"], 1);
+    ASSERT_EQ(j_container[2]["You"], 1);
+    ASSERT_EQ(j_container[2]["boy"], 1);
+    ASSERT_EQ(j_container[2]["bullshit"], 1);
+    ASSERT_EQ(j_container[2]["difference"], 1);
+
+    ASSERT_EQ(j_container[3]["that"], 1);
+    ASSERT_EQ(j_container[3]["the"], 1);
+    ASSERT_EQ(j_container[3]["try"], 1);
+    ASSERT_EQ(j_container[3]["understand"], 1);
+    ASSERT_EQ(j_container[3]["you"], 1);
+}
+
 
 
 

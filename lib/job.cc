@@ -211,4 +211,27 @@ void job::run_reducer_task() {
     tp.wait_all();
 }
 
+void job::save_to_json() {
+    std::vector<json> j_container;
+    j_container.resize(ctx_.num_reducers_);
+
+    for (size_t i = 0; i < j_container.size(); ++i) {
+        for (const auto& ptr : mr_ctx_.reducer_results[i]) {
+            j_container[i][ptr.first] = ptr.second;
+        }
+    }
+
+    std::vector<std::ofstream> out_vec;
+    out_vec.resize(ctx_.num_reducers_);
+
+    for (size_t i = 0; i < out_vec.size(); i++) {
+        std::string filename = ctx_.out_dir_ + "/reducer_" + std::to_string(i);
+        out_vec[i] = std::ofstream(filename);
+    }
+
+    for (size_t i = 0; i < out_vec.size(); ++i) {
+        out_vec[i] << std::setw(4) << j_container[i] << std::endl;
+    }
+}
+
 } // mapreduce

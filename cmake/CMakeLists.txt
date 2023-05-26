@@ -14,6 +14,11 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_VERBOSE_MAKEFILE ON)
 endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
 
+add_subdirectory(${MR_ROOT}/cmake/external/json EXCLUDE_FROM_ALL)
+include_directories(
+        ${MR_ROOT}/cmake/external/json/include
+)
+
 # Set flags to build type
 set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
 set(EXTRA_C_FLAGS_RELEASE "${EXTRA_C_FLAGS_RELEASE}")
