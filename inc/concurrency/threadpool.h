@@ -35,9 +35,7 @@ public:
         return task_idx;
     }
 
-    void wait(int task_id);
     void wait_all();
-    bool calculated(int32_t task_id);
 
 private:
     std::vector<std::thread> threads;

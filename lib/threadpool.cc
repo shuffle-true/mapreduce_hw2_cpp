@@ -22,26 +22,9 @@ threadpool::~threadpool() {
     }
 }
 
-bool threadpool::calculated(int32_t task_id) {
-        std::lock_guard<std::mutex> lock(completed_task_ids_mtx);
-        if (done_ids.find(task_id) != done_ids.end()) {
-            return true;
-        }
-        return false;
-}
-
-void threadpool::wait(int task_id) {
-    std::unique_lock<std::mutex> lock(completed_task_ids_mtx);
-
-    completed_task_ids_cv.wait(lock, [this, task_id]()->bool {
-        return done_ids.find(task_id) != done_ids.end();
-    });
-}
-
 void threadpool::wait_all() {
     std::unique_lock<std::mutex> lock(queue_mutex);
 
-    // ожидаем вызова notify в функции run (сработает после завершения задачи)
     completed_task_ids_cv.wait(lock, [this]()->bool {
         std::lock_guard<std::mutex> task_lock(completed_task_ids_mtx);
         return tasks_queue.empty() && last_idx == done_ids.size();
