@@ -77,6 +77,8 @@ TEST(jobber, mapper) {
     tester.test_map_routine();
     auto mapper_res = tester.mapper_results();
 
+    
+
     ASSERT_EQ(mapper_res.size(), 11);
 
     ASSERT_EQ(mapper_res[0].size(), 2);
@@ -121,6 +123,10 @@ TEST(jobber, mapper) {
     ASSERT_EQ(mapper_res[10][2], "boy");
 }
 
+
+
+
+
 TEST(jobber, shuffler) {
     std::vector<std::string> filenames = {
             "../../test/1.txt",
@@ -135,28 +141,45 @@ TEST(jobber, shuffler) {
     mapreduce::JobTester tester(context);
     tester.test_shuffler_routine();
     auto shuffler_res = tester.shuffler_results();
+    std::vector<std::string> shuffler_result;
+
+    for(int i=0; i<shuffler_res.size(); i++){
+        for(const auto& elem : shuffler_res[i])
+        {
+
+            shuffler_result.push_back(elem.first());
+        }
+        std::cout << "=====" << "\n";
+    }
 
 
-    ASSERT_EQ(shuffler_res.size(), 19);
-    ASSERT_EQ(shuffler_res[0], "A");
-    ASSERT_EQ(shuffler_res[1], "And");
-    ASSERT_EQ(shuffler_res[2], "Answer");
-    ASSERT_EQ(shuffler_res[3], "Between");
-    ASSERT_EQ(shuffler_res[4], "I");
-    ASSERT_EQ(shuffler_res[5], "Is");
-    ASSERT_EQ(shuffler_res[6], "Me");
-    ASSERT_EQ(shuffler_res[7], "Ok");
-    ASSERT_EQ(shuffler_res[8], "To");
-    ASSERT_EQ(shuffler_res[9], "What");
-    ASSERT_EQ(shuffler_res[10], "You");
-    ASSERT_EQ(shuffler_res[11], "boy");
-    ASSERT_EQ(shuffler_res[12], "bullshit");
-    ASSERT_EQ(shuffler_res[13], "difference");
-    ASSERT_EQ(shuffler_res[14], "that");
-    ASSERT_EQ(shuffler_res[15], "the");
-    ASSERT_EQ(shuffler_res[16], "try");
-    ASSERT_EQ(shuffler_res[17], "understand");
-    ASSERT_EQ(shuffler_res[18], "you");
+    ASSERT_EQ(shuffler_res.size(), 4);
+    ASSERT_EQ(shuffler_res[0].size(), 4);
+    ASSERT_EQ(shuffler_res[1].size(), 5);
+    ASSERT_EQ(shuffler_res[2].size(), 5);
+    ASSERT_EQ(shuffler_res[3].size(), 5);
+
+
+
+    ASSERT_EQ(shuffler_result[0], "A");
+    ASSERT_EQ(shuffler_result[1], "And");
+    ASSERT_EQ(shuffler_result[2], "Answer");
+    ASSERT_EQ(shuffler_result[3], "Between");
+    ASSERT_EQ(shuffler_result[4], "I");
+    ASSERT_EQ(shuffler_result[5], "Is");
+    ASSERT_EQ(shuffler_result[6], "Me");
+    ASSERT_EQ(shuffler_result[7], "Ok");
+    ASSERT_EQ(shuffler_result[8], "To");
+    ASSERT_EQ(shuffler_result[9], "What");
+    ASSERT_EQ(shuffler_result[10], "You");
+    ASSERT_EQ(shuffler_result[11], "boy");
+    ASSERT_EQ(shuffler_result[12], "bullshit");
+    ASSERT_EQ(shuffler_result[13], "difference");
+    ASSERT_EQ(shuffler_result[14], "that");
+    ASSERT_EQ(shuffler_result[15], "the");
+    ASSERT_EQ(shuffler_result[16], "try");
+    ASSERT_EQ(shuffler_result[17], "understand");
+    ASSERT_EQ(shuffler_result[18], "you");
 }
 
 
@@ -176,6 +199,13 @@ TEST(jobber, reducer) {
     tester.test_reduce_routine();
     auto reducer_res = tester.reducer_results();
 
+    std::pair<std::string, std::int> reducer_final;
+
+    for(int i =0; i<reducer_results.size(); i++){
+        for (const auto &ptr : reducer_output[i]){
+            reducer_final[ptr.first] = ptr.second;
+        }
+    }
 
     ASSERT_EQ(reducer_res.size(), 19);
     ASSERT_EQ(reducer_res["A"], 1);
