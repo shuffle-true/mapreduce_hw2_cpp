@@ -25,8 +25,9 @@ public:
                const size_t num_reducers,
                const std::string tmp_dir,
                const std::string out_dir,
-               std::function<void(const char*, size_t, vec_t&)> m_task);
-//               std::function<void(map_vec&, std::map<std::string_view, size_t>&, std::string_view, std::mutex&)> r_task);
+               std::function<void(const char*, size_t, vec_t&)> m_task,
+               std::function<void(const std::map<std::string_view, std::vector<size_t>>&,
+                                    std::map<std::string_view, size_t>&)> r_task);
 
 public:
     void set_filenames(const std::vector<std::string>& filenames);
@@ -48,7 +49,8 @@ private:
     std::string tmp_dir_;
     std::string out_dir_;
     std::function<void(const char*, size_t, vec_t&)> map_task_;
-//    std::function<void(map_vec&, std::map<std::string_view, size_t>&, std::string_view, std::mutex&)> reduce_task_;
+    std::function<void(std::map<std::string_view, std::vector<size_t>>&,
+                       std::map<std::string_view, size_t>&)> reduce_task_;
 
     std::vector<std::pair<const char*, size_t>> in_splits_;
 

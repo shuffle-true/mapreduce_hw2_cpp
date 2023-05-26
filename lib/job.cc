@@ -12,6 +12,7 @@ void job::start() {
     split_file_routine();
     run_map_task();
     run_shuffler_task();
+    run_reducer_task();
 }
 
 void job::split_file_routine() {
@@ -191,6 +192,23 @@ void job::run_shuffler_task() {
         }
         mr_ctx_.shuffler_results.push_back(reducer_temp_l);
     }
+}
+
+void job::run_reducer_task() {
+    auto reducer = ctx_.reduce_task_;
+    auto& reducer_res = mr_ctx_.reducer_results;
+    reducer_res.resize(ctx_.num_reducers_);
+    threadpool tp(get_min_available_threads(ctx_.num_reducers_, ctx_.num_workers_));
+
+    // кладем все в тредпул и ждем завершения всех задач
+    for (size_t i = 0; i < mr_ctx_.shuffler_results.size(); ++i) {
+        tp.add_task(
+                reducer,
+                std::ref(mr_ctx_.shuffler_results[i]),
+                std::ref(reducer_res[i])
+        );
+    }
+    tp.wait_all();
 }
 
 } // mapreduce

@@ -35,7 +35,7 @@ public:
         return jobber.mr_ctx_.shuffler_results;
     }
 
-    matrix_t reducer_results() const {
+    std::vector<std::map<std::string_view, size_t>> reducer_results() const {
         return jobber.mr_ctx_.reducer_results;
     }
 

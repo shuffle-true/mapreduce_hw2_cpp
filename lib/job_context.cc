@@ -8,14 +8,17 @@ namespace mapreduce {
 JobContext::JobContext() = default;
 JobContext::JobContext(const std::vector<std::string> &filenames, const size_t num_workers, const size_t num_reducers,
                        const std::string tmp_dir, const std::string out_dir,
-                       std::function<void(const char *, size_t, vec_t &)> m_task)
+                       std::function<void(const char *, size_t, vec_t &)> m_task,
+                       std::function<void(const std::map<std::string_view, std::vector<size_t>>&,
+                                          std::map<std::string_view, size_t>&)> r_task)
         :
         filenames_(filenames),
         num_workers_(num_workers),
         num_reducers_(num_reducers),
         tmp_dir_(tmp_dir),
         out_dir_(out_dir),
-        map_task_(m_task) {}
+        map_task_(m_task),
+        reduce_task_(r_task) {}
 
 void JobContext::set_filenames(const std::vector<std::string> &filenames) {
     filenames_ = filenames;

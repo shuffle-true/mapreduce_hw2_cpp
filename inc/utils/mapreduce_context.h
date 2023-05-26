@@ -20,7 +20,7 @@ public:
 public:
     matrix_t mapper_results;
     std::vector<std::map<std::string_view, std::vector<size_t>>> shuffler_results;
-    matrix_t reducer_results;
+    std::vector<std::map<std::string_view, size_t>> reducer_results;
 };
 
 } // mapreduce
