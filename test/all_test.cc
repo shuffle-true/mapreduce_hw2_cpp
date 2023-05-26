@@ -139,7 +139,27 @@ TEST(jobber, shuffler) {
     ASSERT_EQ(shuffler_res[2].size(), 5);
     ASSERT_EQ(shuffler_res[3].size(), 5);
 
-    // TODO: жописать
+    ASSERT_EQ(shuffler_res[0]["A"], {1});
+    ASSERT_EQ(shuffler_res[0]["And"], {1});
+    ASSERT_EQ(shuffler_res[0]["Answer"], {1});
+    ASSERT_EQ(shuffler_res[0]["Between"], {1});
+    ASSERT_EQ(shuffler_res[1]["I"], {1});
+    ASSERT_EQ(shuffler_res[1]["Is"], {1});
+    ASSERT_EQ(shuffler_res[1]["Me"], {1});
+    ASSERT_EQ(shuffler_res[1]["Ok"], {1});
+    ASSERT_EQ(shuffler_res[1]["To"], {1});
+    ASSERT_EQ(shuffler_res[2]["What"], {1});
+    ASSERT_EQ(shuffler_res[2]["You"], {1});
+    ASSERT_EQ(shuffler_res[2]["boy"], {1});
+    ASSERT_EQ(shuffler_res[2]["bullshit"], {1});
+    ASSERT_EQ(shuffler_res[2]["difference"], {1});
+    ASSERT_EQ(shuffler_res[3]["that"], {1});
+    ASSERT_EQ(shuffler_res[3]["the"], {1});
+    ASSERT_EQ(shuffler_res[3]["try"], {1});
+    ASSERT_EQ(shuffler_res[3]["understand"], {1});
+    ASSERT_EQ(shuffler_res[3]["you"], {1});
+
+
 
 }
 
@@ -159,6 +179,36 @@ TEST(jobber, reducer) {
     mapreduce::JobTester tester(context);
     tester.test_reduce_routine();
     auto reducer_res = tester.reducer_results();
+    ASSERT_EQ(reducer_res.size(), 4);
+    ASSERT_EQ(reducer_res[0].size(), 4);
+    ASSERT_EQ(reducer_res[1].size(), 5);
+    ASSERT_EQ(reducer_res[2].size(), 5);
+    ASSERT_EQ(reducer_res[3].size(), 5);
+    
+    ASSERT_EQ(reducer_res[0]["A"], 1);
+    ASSERT_EQ(reducer_res[0]["And"], 1);
+    ASSERT_EQ(reducer_res[0]["Answer"], 1);
+    ASSERT_EQ(reducer_res[0]["Between"], 1);
+    ASSERT_EQ(reducer_res[1]["I"], 1);
+    ASSERT_EQ(reducer_res[1]["Is"], 1);
+    ASSERT_EQ(reducer_res[1]["Me"], 1);
+    ASSERT_EQ(reducer_res[1]["Ok"], 1);
+    ASSERT_EQ(reducer_res[1]["To"], 1);
+    ASSERT_EQ(reducer_res[2]["What"], 1);
+    ASSERT_EQ(reducer_res[2]["You"], 1);
+    ASSERT_EQ(reducer_res[2]["boy"], 1);
+    ASSERT_EQ(reducer_res[2]["bullshit"], 1);
+    ASSERT_EQ(reducer_res[2]["difference"], 1);
+    ASSERT_EQ(reducer_res[3]["that"], 1);
+    ASSERT_EQ(reducer_res[3]["the"], 1);
+    ASSERT_EQ(reducer_res[3]["try"], 1);
+    ASSERT_EQ(reducer_res[3]["understand"], 1);
+    ASSERT_EQ(reducer_res[3]["you"], 1);
+    
+
+
+
+
 }
 
 TEST(jobber, saver) {
