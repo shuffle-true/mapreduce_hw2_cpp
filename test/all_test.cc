@@ -139,25 +139,25 @@ TEST(jobber, shuffler) {
     ASSERT_EQ(shuffler_res[2].size(), 5);
     ASSERT_EQ(shuffler_res[3].size(), 5);
 
-    ASSERT_EQ(shuffler_res[0]["A"], {1});
-    ASSERT_EQ(shuffler_res[0]["And"], {1});
-    ASSERT_EQ(shuffler_res[0]["Answer"], {1});
-    ASSERT_EQ(shuffler_res[0]["Between"], {1});
-    ASSERT_EQ(shuffler_res[1]["I"], {1});
-    ASSERT_EQ(shuffler_res[1]["Is"], {1});
-    ASSERT_EQ(shuffler_res[1]["Me"], {1});
-    ASSERT_EQ(shuffler_res[1]["Ok"], {1});
-    ASSERT_EQ(shuffler_res[1]["To"], {1});
-    ASSERT_EQ(shuffler_res[2]["What"], {1});
-    ASSERT_EQ(shuffler_res[2]["You"], {1});
-    ASSERT_EQ(shuffler_res[2]["boy"], {1});
-    ASSERT_EQ(shuffler_res[2]["bullshit"], {1});
-    ASSERT_EQ(shuffler_res[2]["difference"], {1});
-    ASSERT_EQ(shuffler_res[3]["that"], {1});
-    ASSERT_EQ(shuffler_res[3]["the"], {1});
-    ASSERT_EQ(shuffler_res[3]["try"], {1});
-    ASSERT_EQ(shuffler_res[3]["understand"], {1});
-    ASSERT_EQ(shuffler_res[3]["you"], {1});
+    ASSERT_EQ(shuffler_res[0]["A"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[0]["And"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[0]["Answer"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[0]["Between"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[1]["I"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[1]["Is"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[1]["Me"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[1]["Ok"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[1]["To"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[2]["What"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[2]["You"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[2]["boy"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[2]["bullshit"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[2]["difference"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[3]["that"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[3]["the"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[3]["try"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[3]["understand"], std::vector<size_t>({1}));
+    ASSERT_EQ(shuffler_res[3]["you"], std::vector<size_t>({1}));
 
 
 
